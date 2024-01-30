@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model DocumentType {
+  id             Int    @id @default(autoincrement())
+  name           String
+  title          String
+  validityPeriod Int
+
+  texts             DocumentTypeText[] // Relacionamento com a nova tabela
+  documentTypeField DocumentTypeField[]
+  document          Document[]
+}
+
+model DocumentTypeText {
+  id             Int    @id @default(autoincrement())
+  documentTypeId Int
+  name           String
+  text           String
+
+  fields       DocumentTypeField[] // Relacionamento para armazenar campos específicos do texto
+  documentType DocumentType        @relation(fields: [documentTypeId], references: [id])
+  Document     Document[]
+}
+
+model DocumentTypeField {
+  id                 Int    @id @default(autoincrement())
+  documentTypeId     Int?
+  documentTypeTextId Int
+  name               String
+  type               String // Adicionamos um campo fieldType para definir o tipo do campo (opcional)
+  identifier         String
+
+  documentTypeText DocumentTypeText @relation(fields: [documentTypeTextId], references: [id])
+  documentType     DocumentType?    @relation(fields: [documentTypeId], references: [id])
+}
+
+model DocumentField {
+  id         Int    @id @default(autoincrement())
+  documentId Int
+  name       String
+  type       String
+  identifier String
+  value      String
+
+  document Document @relation(fields: [documentId], references: [id])
+}
+
+model Document {
+  id                 Int      @id @default(autoincrement())
+  documentTypeId     Int
+  documentTypeTextId Int
+  number             String
+  text               String
+  date               DateTime @default(now())
+
+  documentType DocumentType     @relation(fields: [documentTypeId], references: [id])
+  fields       DocumentField[]
+  texts        DocumentTypeText @relation(fields: [documentTypeTextId], references: [id])
+
+  @@unique([number, documentTypeId])
+}
