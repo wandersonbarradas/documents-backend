@@ -65,9 +65,6 @@ export const update = async (
 
 export const remove = async (id: number, documentTypeId?: number) => {
     try {
-        await prisma.documentTypeField.deleteMany({
-            where: { documentTypeTextId: id },
-        });
         return await prisma.documentTypeText.delete({
             where: { id, documentTypeId },
         });

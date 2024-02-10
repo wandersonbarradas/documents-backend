@@ -24,43 +24,17 @@ model DocumentType {
   title          String
   validityPeriod Int
 
-  texts             DocumentTypeText[] // Relacionamento com a nova tabela
-  documentTypeField DocumentTypeField[]
-  document          Document[]
+  texts    DocumentTypeText[] // Relacionamento com a nova tabela
+  document Document[]
 }
 
 model DocumentTypeText {
-  id             Int    @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   documentTypeId Int
   name           String
   text           String
-
-  fields       DocumentTypeField[] // Relacionamento para armazenar campos específicos do texto
-  documentType DocumentType        @relation(fields: [documentTypeId], references: [id])
-  Document     Document[]
-}
-
-model DocumentTypeField {
-  id                 Int    @id @default(autoincrement())
-  documentTypeId     Int?
-  documentTypeTextId Int
-  name               String
-  type               String // Adicionamos um campo fieldType para definir o tipo do campo (opcional)
-  identifier         String
-
-  documentTypeText DocumentTypeText @relation(fields: [documentTypeTextId], references: [id])
-  documentType     DocumentType?    @relation(fields: [documentTypeId], references: [id])
-}
-
-model DocumentField {
-  id         Int    @id @default(autoincrement())
-  documentId Int
-  name       String
-  type       String
-  identifier String
-  value      String
-
-  document Document @relation(fields: [documentId], references: [id])
+  documentType   DocumentType @relation(fields: [documentTypeId], references: [id])
+  Document       Document[]
 }
 
 model Document {
@@ -72,7 +46,6 @@ model Document {
   date               DateTime @default(now())
 
   documentType DocumentType     @relation(fields: [documentTypeId], references: [id])
-  fields       DocumentField[]
   texts        DocumentTypeText @relation(fields: [documentTypeTextId], references: [id])
 
   @@unique([number, documentTypeId])

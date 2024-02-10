@@ -27,16 +27,6 @@ export const addDocument: RequestHandler = async (req, res) => {
         text: z.string(),
         documentTypeId: z.number(),
         documentTypeTextId: z.number(),
-        fields: z
-            .array(
-                z.object({
-                    name: z.string(),
-                    value: z.string(),
-                    type: z.string(),
-                    identifier: z.string(),
-                }),
-            )
-            .optional(),
     });
 
     const body = addDocumentSchema.safeParse(req.body);
@@ -66,17 +56,6 @@ export const updateDocument: RequestHandler = async (req, res) => {
         documentTypeId: z.number().optional(),
         number: z.string().optional(),
         documentTypeTextId: z.number().optional(),
-        fields: z
-            .array(
-                z.object({
-                    id: z.number(),
-                    name: z.string().optional(),
-                    value: z.string().optional(),
-                    type: z.string().optional(),
-                    identifier: z.string().optional(),
-                }),
-            )
-            .optional(),
     });
     const body = addDocumentSchema.safeParse(req.body);
     if (!body.success) {

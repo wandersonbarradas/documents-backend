@@ -1,9 +1,9 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { extractCertificationNumber } from "../utils/decodedNumberDocument";
 
 const prisma = new PrismaClient();
 
-const include = { documentType: true, fields: true };
+const include = { documentType: true };
 
 export const getAll = async () => {
     try {
@@ -31,12 +31,6 @@ type AddDocumentData = {
     date: Date;
     documentTypeId: number;
     documentTypeTextId: number;
-    fields?: {
-        name: string;
-        value: string;
-        type: string;
-        identifier: string;
-    }[];
 };
 
 export const add = async (data: AddDocumentData) => {
@@ -48,9 +42,6 @@ export const add = async (data: AddDocumentData) => {
                 number: data.number,
                 text: data.text,
                 date: data.date,
-                fields: {
-                    create: data.fields,
-                },
             },
             include,
         });
@@ -66,12 +57,6 @@ type UpdateDocumentData = {
     date?: Date;
     documentTypeId?: number;
     documentTypeTextId?: number;
-    fields?: {
-        id: number;
-        fieldName?: string;
-        fieldType?: string;
-        identifier?: string;
-    }[];
 };
 
 export const update = async (id: number, data: UpdateDocumentData) => {
@@ -84,12 +69,6 @@ export const update = async (id: number, data: UpdateDocumentData) => {
                 documentTypeTextId: data.documentTypeTextId,
                 number: data.number,
                 text: data.text,
-                fields: {
-                    update: data.fields?.map((field) => ({
-                        where: { id: field.id },
-                        data: field,
-                    })),
-                },
             },
             include,
         });
@@ -101,7 +80,6 @@ export const update = async (id: number, data: UpdateDocumentData) => {
 
 export const remove = async (id: number) => {
     try {
-        await prisma.documentField.deleteMany({ where: { documentId: id } });
         return await prisma.document.delete({ where: { id } });
     } catch (error) {
         console.log("🚀 ~ remove ~ error:", error);
