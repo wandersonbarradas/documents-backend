@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export const getAll = async () => {
     try {
-        return await prisma.documentType.findMany();
+        return await prisma.documentType.findMany({ orderBy: { id: "asc" } });
     } catch (error) {
         console.log("🚀 ~ getAll ~ error:", error);
         return false;

@@ -9,6 +9,7 @@ export const getAll = async () => {
     try {
         return await prisma.document.findMany({
             include,
+            orderBy: { id: "desc" },
         });
     } catch (error) {
         console.log("🚀 ~ getAll ~ error:", error);
