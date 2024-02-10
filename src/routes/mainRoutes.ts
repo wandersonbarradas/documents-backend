@@ -5,12 +5,15 @@ import * as documents from "../controllers/documents";
 import * as documentsTypesTexts from "../controllers/documentsTypesTexts";
 import * as documentsTypesFields from "../controllers/documentsTypesFields";
 import * as auth from "../controllers/auth";
+import * as utils from "../controllers/utils";
 import { privateRouter } from "../config/passport";
 const router = Router();
 
 router.get("/ping", (req: Request, res: Response) => {
     res.json({ pong: true });
 });
+
+router.get("/documents/pdf", utils.generatePDF);
 
 //Auth
 router.post("/auth/register", auth.register);
@@ -35,6 +38,11 @@ router.delete(
     documentsTypes.deleteDocumentType,
 );
 //Texts
+router.get(
+    "/documents-types/:id_document_type/texts/",
+    privateRouter,
+    documentsTypesTexts.getAll,
+);
 router.get(
     "/documents-types/:id_document_type/texts/:id",
     privateRouter,

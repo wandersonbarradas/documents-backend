@@ -2,6 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+export const getAllByDocumentType = async (documentTypeId: number) => {
+    try {
+        return await prisma.documentTypeText.findMany({
+            where: { documentTypeId: documentTypeId },
+        });
+    } catch (error) {
+        console.log("🚀 ~ getAll ~ error:", error);
+        return false;
+    }
+};
+
 export const getOne = async (id: number, documentTypeId?: number) => {
     try {
         return await prisma.documentTypeText.findFirst({

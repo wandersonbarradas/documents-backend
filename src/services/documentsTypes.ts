@@ -15,7 +15,7 @@ export const getOne = async (id: number) => {
     try {
         return await prisma.documentType.findFirst({
             where: { id },
-            include: { texts: { select: { name: true, id: true } } },
+            include: { texts: true, documentTypeField: true },
         });
     } catch (error) {
         console.log("🚀 ~ getOne ~ error:", error);
@@ -56,6 +56,12 @@ export const update = async (id: number, data: UpdateDocumentData) => {
 
 export const remove = async (id: number) => {
     try {
+        await prisma.documentTypeField.deleteMany({
+            where: { documentTypeId: id },
+        });
+        await prisma.documentTypeText.deleteMany({
+            where: { documentTypeId: id },
+        });
         return await prisma.documentType.delete({ where: { id } });
     } catch (error) {
         console.log("🚀 ~ remove ~ error:", error);

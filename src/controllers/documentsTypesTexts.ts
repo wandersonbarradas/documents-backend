@@ -2,6 +2,18 @@ import { RequestHandler } from "express";
 import { z } from "zod";
 import * as documentsTypesTexts from "../services/documentsTypesTexts";
 
+export const getAll: RequestHandler = async (req, res) => {
+    const { id_document_type } = req.params;
+    const items = await documentsTypesTexts.getAllByDocumentType(
+        parseInt(id_document_type),
+    );
+    if (items) {
+        return res.json({ documentsTypesTexts: items });
+    }
+
+    res.json({ error: "Ocorreu um erro!" });
+};
+
 export const getDocumentTypeText: RequestHandler = async (req, res) => {
     const { id, id_document_type } = req.params;
     const documentTypeTextItem = await documentsTypesTexts.getOne(

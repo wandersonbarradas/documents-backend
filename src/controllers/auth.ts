@@ -35,7 +35,12 @@ export const login: RequestHandler = async (req, res) => {
     const body = authSchema.safeParse(req.body);
     if (!body.success) return res.json({ error: "Dados inválidos!" });
     const user = await users.getUserFromEmail(body.data.email);
-    if (!user) return res.json({ error: "Usuário não encontrado!" });
+    if (!user) {
+        return res.status(401).json({
+            error: "Email e/ou senha incorreta!",
+            status: false,
+        });
+    }
     bcrypt.compare(body.data.password, user.password, (err, hash) => {
         if (hash) {
             const token = generateToken({ id: user.id, email: user.email });
@@ -47,9 +52,8 @@ export const login: RequestHandler = async (req, res) => {
                     err,
                 );
             }
-            res.status(401);
-            return res.json({
-                error: "Senha Incorreta!",
+            return res.status(401).json({
+                error: "Email e/ou senha incorreta!",
                 status: false,
             });
         }
