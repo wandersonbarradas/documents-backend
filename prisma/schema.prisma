@@ -11,42 +11,73 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id                    Int                @id @default(autoincrement())
+  name                  String
+  email                 String             @unique
+  password              String
+  created_at            DateTime           @default(now())
+  updated_at            DateTime?
+  created_by            Int?
+  document_type_created DocumentType[]
+  document_type_text    DocumentTypeText[]
+  document              Document[]
+
+  @@map("doc_user")
 }
 
 model DocumentType {
-  id             Int    @id @default(autoincrement())
-  name           String
-  title          String
-  validityPeriod Int
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  name            String    @unique
+  title           String
+  validity        Int
+  expires         Boolean
+  has_number      Boolean
+  created_at      DateTime  @default(now())
+  updated_at      DateTime?
+  last_updated_by Int?
 
+  user     User               @relation(fields: [user_id], references: [id])
   texts    DocumentTypeText[] // Relacionamento com a nova tabela
   document Document[]
+
+  @@map("doc_document_type")
 }
 
 model DocumentTypeText {
-  id             Int          @id @default(autoincrement())
-  documentTypeId Int
-  name           String
-  text           String
-  documentType   DocumentType @relation(fields: [documentTypeId], references: [id])
-  Document       Document[]
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  document_type_id Int
+  name             String
+  text             String
+  created_at       DateTime  @default(now())
+  updated_at       DateTime?
+  last_updated_by  Int?
+
+  user          User         @relation(fields: [user_id], references: [id])
+  document_type DocumentType @relation(fields: [document_type_id], references: [id])
+  document      Document[]
+
+  @@unique([name, document_type_id])
+  @@map("doc_document_type_text")
 }
 
 model Document {
-  id                 Int      @id @default(autoincrement())
-  documentTypeId     Int
-  documentTypeTextId Int
-  number             String
-  text               String
-  date               DateTime @default(now())
+  id                    Int       @id @default(autoincrement())
+  user_id               Int
+  document_type_id      Int
+  document_type_text_id Int
+  number                String
+  text                  String
+  date                  DateTime  @default(now())
+  created_at            DateTime  @default(now())
+  updated_at            DateTime?
+  last_updated_by       Int?
 
-  documentType DocumentType     @relation(fields: [documentTypeId], references: [id])
-  texts        DocumentTypeText @relation(fields: [documentTypeTextId], references: [id])
+  user          User             @relation(fields: [user_id], references: [id])
+  document_type DocumentType     @relation(fields: [document_type_id], references: [id])
+  texts         DocumentTypeText @relation(fields: [document_type_text_id], references: [id])
 
-  @@unique([number, documentTypeId])
+  @@unique([number, document_type_id])
+  @@map("doc_document")
 }

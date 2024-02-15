@@ -11,7 +11,7 @@ router.get("/ping", (req: Request, res: Response) => {
     res.json({ pong: true });
 });
 
-router.get("/documents/pdf", utils.generatePDF);
+router.get("/documents/pdf/:id", privateRouter, utils.generatePDF);
 
 //Auth
 router.post("/auth/register", auth.register);

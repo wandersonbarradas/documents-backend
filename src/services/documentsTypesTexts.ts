@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const getAllByDocumentType = async (documentTypeId: number) => {
     try {
         return await prisma.documentTypeText.findMany({
-            where: { documentTypeId: documentTypeId },
+            where: { document_type_id: documentTypeId },
         });
     } catch (error) {
         console.log("🚀 ~ getAll ~ error:", error);
@@ -16,7 +16,7 @@ export const getAllByDocumentType = async (documentTypeId: number) => {
 export const getOne = async (id: number, documentTypeId?: number) => {
     try {
         return await prisma.documentTypeText.findFirst({
-            where: { id, documentTypeId },
+            where: { id, document_type_id: documentTypeId },
         });
     } catch (error) {
         console.log("🚀 ~ getOne ~ error:", error);
@@ -24,14 +24,14 @@ export const getOne = async (id: number, documentTypeId?: number) => {
     }
 };
 
-type AddDocumentType = {
-    text: string;
-    name: string;
-};
-export const add = async (documentTypeId: number, data: AddDocumentType) => {
+type AddDocumentTypeTextData = Prisma.Args<
+    typeof prisma.documentTypeText,
+    "create"
+>["data"];
+export const add = async (data: AddDocumentTypeTextData) => {
     try {
         return await prisma.documentTypeText.create({
-            data: { ...data, documentTypeId },
+            data,
         });
     } catch (error) {
         console.log("🚀 ~ add ~ error:", error);
@@ -43,18 +43,18 @@ type UpdateFilters = {
     id: number;
     documentTypeId?: number;
 };
-type UpdateDocumentType = {
-    text?: string;
-    name?: string;
-};
+type UpdateDocumentTypeTextData = Prisma.Args<
+    typeof prisma.documentTypeText,
+    "update"
+>["data"];
 
 export const update = async (
     filters: UpdateFilters,
-    data: UpdateDocumentType,
+    data: UpdateDocumentTypeTextData,
 ) => {
     try {
         return await prisma.documentTypeText.update({
-            where: { id: filters.id, documentTypeId: filters.documentTypeId },
+            where: { id: filters.id, document_type_id: filters.documentTypeId },
             data,
         });
     } catch (error) {
@@ -66,7 +66,7 @@ export const update = async (
 export const remove = async (id: number, documentTypeId?: number) => {
     try {
         return await prisma.documentTypeText.delete({
-            where: { id, documentTypeId },
+            where: { id, document_type_id: documentTypeId },
         });
     } catch (error) {
         console.log("🚀 ~ add ~ error:", error);

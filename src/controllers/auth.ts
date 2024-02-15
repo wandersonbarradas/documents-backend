@@ -12,13 +12,17 @@ export const register: RequestHandler = async (req, res) => {
             .min(6)
             .transform((pass) => bcrypt.hashSync(pass, 10)),
         name: z.string(),
+        created_at: z
+            .string()
+            .transform((date) => new Date(date))
+            .optional(),
     });
     const body = registerSchema.safeParse(req.body);
     if (!body.success) return res.json({ error: "Dados inválidos!" });
 
     const newUser = await users.addUser({
         ...body.data,
-        createdAt: new Date(),
+        created_at: new Date(),
     });
     if (newUser) {
         return res.json({ user: newUser });

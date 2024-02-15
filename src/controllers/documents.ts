@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import * as documents from "../services/documents";
 import { z } from "zod";
+import { User } from "@prisma/client";
 
 export const getAll: RequestHandler = async (req, res) => {
     const documentsItems = await documents.getAll();
@@ -22,11 +23,16 @@ export const getDocument: RequestHandler = async (req, res) => {
 };
 
 export const addDocument: RequestHandler = async (req, res) => {
+    const user = req.user as User;
     const addDocumentSchema = z.object({
         date: z.string().transform((date) => new Date(date)),
         text: z.string(),
-        documentTypeId: z.number(),
-        documentTypeTextId: z.number(),
+        document_type_id: z.number(),
+        document_type_text_id: z.number(),
+        created_at: z
+            .string()
+            .transform((date) => new Date(date))
+            .optional(),
     });
 
     const body = addDocumentSchema.safeParse(req.body);
@@ -34,11 +40,14 @@ export const addDocument: RequestHandler = async (req, res) => {
         return res.json({ error: "Dados inválidos!" });
     }
 
-    const nextNumber = await documents.getNextNumber(body.data.documentTypeId);
+    const nextNumber = await documents.getNextNumber(
+        body.data.document_type_id,
+    );
     if (nextNumber) {
         const newDocument = await documents.add({
             ...body.data,
             number: nextNumber,
+            user_id: user.id,
         });
         if (newDocument) {
             return res.json({ document: newDocument });
@@ -50,19 +59,26 @@ export const addDocument: RequestHandler = async (req, res) => {
 
 export const updateDocument: RequestHandler = async (req, res) => {
     const { id } = req.params;
+    const user = req.user as User;
     const addDocumentSchema = z.object({
-        date: z.string().transform((date) => new Date(date)),
+        date: z
+            .string()
+            .transform((date) => new Date(date))
+            .optional(),
         text: z.string().optional(),
-        documentTypeId: z.number().optional(),
         number: z.string().optional(),
-        documentTypeTextId: z.number().optional(),
+        document_type_text_id: z.number().optional(),
+        updated_at: z.string().transform((date) => new Date(date)),
     });
     const body = addDocumentSchema.safeParse(req.body);
     if (!body.success) {
         return res.json({ error: "Dados inválidos!" });
     }
 
-    const updatedDocument = await documents.update(parseInt(id), body.data);
+    const updatedDocument = await documents.update(parseInt(id), {
+        ...body.data,
+        last_updated_by: user.id,
+    });
     if (updatedDocument) {
         return res.json({ document: updatedDocument });
     }

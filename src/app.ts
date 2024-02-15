@@ -4,6 +4,7 @@ import cors from "cors";
 import { requestIntercepter } from "./utils/requestIntercepter";
 import mainRouter from "./routes/mainRoutes";
 import passport from "passport";
+import path from "path";
 const app = express();
 
 app.use(express.json());
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
+app.use(express.static(path.join(__dirname, "../public")));
 app.all("*", requestIntercepter);
 app.use("/", mainRouter);
 
