@@ -62,7 +62,6 @@ export const updateDocumentType: RequestHandler = async (req, res) => {
     });
     const body = updateDocumentTypeSchema.safeParse(req.body);
     if (!body.success) return res.json({ error: "Dados inválidos!" });
-
     const updatedDocumentType = await documentsTypes.update(parseInt(id), {
         ...body.data,
         last_updated_by: user.id,

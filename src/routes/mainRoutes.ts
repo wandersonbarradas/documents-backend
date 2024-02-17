@@ -14,7 +14,7 @@ router.get("/ping", (req: Request, res: Response) => {
 router.get("/documents/pdf/:id", privateRouter, utils.generatePDF);
 
 //Auth
-router.post("/auth/register", auth.register);
+router.post("/auth/register", privateRouter, auth.register);
 router.post("/auth/login", auth.login);
 router.get("/auth/isLoggedIn", privateRouter, auth.isLoggedIn);
 //Documents types
