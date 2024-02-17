@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { extractCertificationNumber } from "../utils/decodedNumberDocument";
+import { getErrorFromPrisma } from "../utils/getErrorFromPrisma";
 
 const prisma = new PrismaClient();
 
@@ -44,7 +45,7 @@ export const add = async (data: AddDocumentData) => {
         });
     } catch (error) {
         console.log("🚀 ~ add ~ error:", error);
-        return false;
+        return getErrorFromPrisma(error);
     }
 };
 
@@ -59,7 +60,7 @@ export const update = async (id: number, data: UpdateDocumentData) => {
         });
     } catch (error) {
         console.log("🚀 ~ update ~ error:", error);
-        return false;
+        return getErrorFromPrisma(error);
     }
 };
 
@@ -72,8 +73,8 @@ export const remove = async (id: number) => {
     }
 };
 
-export const getNextNumber = async (documentTypeId: number) => {
-    const currentYear = new Date().getFullYear();
+export const getNextNumber = async (documentTypeId: number, date: Date) => {
+    const currentYear = date.getFullYear();
     try {
         const lastDocument = await prisma.document.findFirst({
             where: {

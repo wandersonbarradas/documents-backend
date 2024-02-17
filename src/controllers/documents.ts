@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import * as documents from "../services/documents";
+import * as documents_types from "../services/documentsTypes";
 import { z } from "zod";
 import { User } from "@prisma/client";
 
@@ -40,18 +41,31 @@ export const addDocument: RequestHandler = async (req, res) => {
         return res.json({ error: "Dados inválidos!" });
     }
 
-    const nextNumber = await documents.getNextNumber(
+    const document_type = await documents_types.getOne(
         body.data.document_type_id,
     );
-    if (nextNumber) {
-        const newDocument = await documents.add({
-            ...body.data,
-            number: nextNumber,
-            user_id: user.id,
-        });
-        if (newDocument) {
-            return res.json({ document: newDocument });
-        }
+    if (!document_type) {
+        return res.json({ error: "Tipo de documento informado não existe!" });
+    }
+
+    let nextNumber: string | undefined = undefined;
+    if (document_type.has_number) {
+        nextNumber =
+            (await documents.getNextNumber(
+                body.data.document_type_id,
+                body.data.date,
+            )) || undefined;
+    }
+    const newDocument = await documents.add({
+        ...body.data,
+        number: nextNumber,
+        user_id: user.id,
+    });
+    if (newDocument && typeof newDocument !== "string") {
+        return res.json({ document: newDocument });
+    }
+    if (typeof newDocument === "string") {
+        return res.json({ error: newDocument });
     }
 
     res.json({ error: "Ocorreu um erro!" });
@@ -74,13 +88,15 @@ export const updateDocument: RequestHandler = async (req, res) => {
     if (!body.success) {
         return res.json({ error: "Dados inválidos!" });
     }
-
     const updatedDocument = await documents.update(parseInt(id), {
         ...body.data,
         last_updated_by: user.id,
     });
-    if (updatedDocument) {
+    if (updatedDocument && typeof updatedDocument !== "string") {
         return res.json({ document: updatedDocument });
+    }
+    if (typeof updatedDocument === "string") {
+        return res.json({ error: updatedDocument });
     }
 
     res.json({ error: "Ocorreu um erro!" });

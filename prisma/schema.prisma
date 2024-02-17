@@ -67,7 +67,7 @@ model Document {
   user_id               Int
   document_type_id      Int
   document_type_text_id Int
-  number                String
+  number                String?
   text                  String
   date                  DateTime  @default(now())
   created_at            DateTime  @default(now())
