@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "set NODE_ENV=test& jest --runInBand",
-        "dev": "nodemon"
+        "dev": "nodemon",
+        "vercel-build": "npx prisma generate"
     },
     "keywords": [],
     "author": "",
