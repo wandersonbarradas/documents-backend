@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import * as documents from "../services/documents";
+import * as documents_types from "../services/documentsTypes";
 import { z } from "zod";
+import { User } from "@prisma/client";
 
 export const getAll: RequestHandler = async (req, res) => {
     const documentsItems = await documents.getAll();
@@ -22,20 +24,15 @@ export const getDocument: RequestHandler = async (req, res) => {
 };
 
 export const addDocument: RequestHandler = async (req, res) => {
+    const user = req.user as User;
     const addDocumentSchema = z.object({
         date: z.string().transform((date) => new Date(date)),
         text: z.string(),
-        documentTypeId: z.number(),
-        documentTypeTextId: z.number(),
-        fields: z
-            .array(
-                z.object({
-                    name: z.string(),
-                    value: z.string(),
-                    type: z.string(),
-                    identifier: z.string(),
-                }),
-            )
+        document_type_id: z.number(),
+        document_type_text_id: z.number(),
+        created_at: z
+            .string()
+            .transform((date) => new Date(date))
             .optional(),
     });
 
@@ -44,15 +41,31 @@ export const addDocument: RequestHandler = async (req, res) => {
         return res.json({ error: "Dados inválidos!" });
     }
 
-    const nextNumber = await documents.getNextNumber(body.data.documentTypeId);
-    if (nextNumber) {
-        const newDocument = await documents.add({
-            ...body.data,
-            number: nextNumber,
-        });
-        if (newDocument) {
-            return res.json({ document: newDocument });
-        }
+    const document_type = await documents_types.getOne(
+        body.data.document_type_id,
+    );
+    if (!document_type) {
+        return res.json({ error: "Tipo de documento informado não existe!" });
+    }
+
+    let nextNumber: string | undefined = undefined;
+    if (document_type.has_number) {
+        nextNumber =
+            (await documents.getNextNumber(
+                body.data.document_type_id,
+                body.data.date,
+            )) || undefined;
+    }
+    const newDocument = await documents.add({
+        ...body.data,
+        number: nextNumber,
+        user_id: user.id,
+    });
+    if (newDocument && typeof newDocument !== "string") {
+        return res.json({ document: newDocument });
+    }
+    if (typeof newDocument === "string") {
+        return res.json({ error: newDocument });
     }
 
     res.json({ error: "Ocorreu um erro!" });
@@ -60,32 +73,30 @@ export const addDocument: RequestHandler = async (req, res) => {
 
 export const updateDocument: RequestHandler = async (req, res) => {
     const { id } = req.params;
+    const user = req.user as User;
     const addDocumentSchema = z.object({
-        date: z.string().transform((date) => new Date(date)),
-        text: z.string().optional(),
-        documentTypeId: z.number().optional(),
-        number: z.string().optional(),
-        documentTypeTextId: z.number().optional(),
-        fields: z
-            .array(
-                z.object({
-                    id: z.number(),
-                    name: z.string().optional(),
-                    value: z.string().optional(),
-                    type: z.string().optional(),
-                    identifier: z.string().optional(),
-                }),
-            )
+        date: z
+            .string()
+            .transform((date) => new Date(date))
             .optional(),
+        text: z.string().optional(),
+        number: z.string().optional(),
+        document_type_text_id: z.number().optional(),
+        updated_at: z.string().transform((date) => new Date(date)),
     });
     const body = addDocumentSchema.safeParse(req.body);
     if (!body.success) {
         return res.json({ error: "Dados inválidos!" });
     }
-
-    const updatedDocument = await documents.update(parseInt(id), body.data);
-    if (updatedDocument) {
+    const updatedDocument = await documents.update(parseInt(id), {
+        ...body.data,
+        last_updated_by: user.id,
+    });
+    if (updatedDocument && typeof updatedDocument !== "string") {
         return res.json({ document: updatedDocument });
+    }
+    if (typeof updatedDocument === "string") {
+        return res.json({ error: updatedDocument });
     }
 
     res.json({ error: "Ocorreu um erro!" });

@@ -1,15 +1,24 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { extractCertificationNumber } from "../utils/decodedNumberDocument";
+import { getErrorFromPrisma } from "../utils/getErrorFromPrisma";
 
 const prisma = new PrismaClient();
 
-const include = { documentType: true, fields: true };
+const include = { document_type: true };
 
 export const getAll = async () => {
     try {
         return await prisma.document.findMany({
+            // where: {
+            //     text: {
+            //         contains: "wanDerSon",
+            //         mode: "insensitive",
+            //     },
+            // },
             include,
-            orderBy: { id: "desc" },
+            orderBy: {
+                id: "asc",
+            },
         });
     } catch (error) {
         console.log("🚀 ~ getAll ~ error:", error);
@@ -26,83 +35,37 @@ export const getOne = async (id: number) => {
     }
 };
 
-type AddDocumentData = {
-    number: string;
-    text: string;
-    date: Date;
-    documentTypeId: number;
-    documentTypeTextId: number;
-    fields?: {
-        name: string;
-        value: string;
-        type: string;
-        identifier: string;
-    }[];
-};
+type AddDocumentData = Prisma.Args<typeof prisma.document, "create">["data"];
 
 export const add = async (data: AddDocumentData) => {
     try {
         return await prisma.document.create({
-            data: {
-                documentTypeTextId: data.documentTypeTextId,
-                documentTypeId: data.documentTypeId,
-                number: data.number,
-                text: data.text,
-                date: data.date,
-                fields: {
-                    create: data.fields,
-                },
-            },
+            data,
             include,
         });
     } catch (error) {
         console.log("🚀 ~ add ~ error:", error);
-        return false;
+        return getErrorFromPrisma(error);
     }
 };
 
-type UpdateDocumentData = {
-    number?: string;
-    text?: string;
-    date?: Date;
-    documentTypeId?: number;
-    documentTypeTextId?: number;
-    fields?: {
-        id: number;
-        fieldName?: string;
-        fieldType?: string;
-        identifier?: string;
-    }[];
-};
+type UpdateDocumentData = Prisma.Args<typeof prisma.document, "update">["data"];
 
 export const update = async (id: number, data: UpdateDocumentData) => {
     try {
         return await prisma.document.update({
             where: { id },
-            data: {
-                date: data.date,
-                documentTypeId: data.documentTypeId,
-                documentTypeTextId: data.documentTypeTextId,
-                number: data.number,
-                text: data.text,
-                fields: {
-                    update: data.fields?.map((field) => ({
-                        where: { id: field.id },
-                        data: field,
-                    })),
-                },
-            },
+            data,
             include,
         });
     } catch (error) {
-        console.log("🚀 ~ add ~ error:", error);
-        return false;
+        console.log("🚀 ~ update ~ error:", error);
+        return getErrorFromPrisma(error);
     }
 };
 
 export const remove = async (id: number) => {
     try {
-        await prisma.documentField.deleteMany({ where: { documentId: id } });
         return await prisma.document.delete({ where: { id } });
     } catch (error) {
         console.log("🚀 ~ remove ~ error:", error);
@@ -110,13 +73,13 @@ export const remove = async (id: number) => {
     }
 };
 
-export const getNextNumber = async (documentTypeId: number) => {
-    const currentYear = new Date().getFullYear();
+export const getNextNumber = async (documentTypeId: number, date: Date) => {
+    const currentYear = date.getFullYear();
     try {
         const lastDocument = await prisma.document.findFirst({
             where: {
                 AND: {
-                    documentTypeId: { equals: documentTypeId },
+                    document_type_id: { equals: documentTypeId },
                     number: { contains: `/${currentYear}` },
                 },
             },

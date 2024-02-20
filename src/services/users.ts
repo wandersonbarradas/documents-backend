@@ -26,7 +26,7 @@ export const addUser = async (data: AddUser) => {
     try {
         return await prisma.user.create({
             data,
-            select: { createdAt: true, email: true, name: true, id: true },
+            select: { created_at: true, email: true, name: true, id: true },
         });
     } catch (error) {
         console.log("🚀 ~ addUser ~ error:", error);

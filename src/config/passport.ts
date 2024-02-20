@@ -14,7 +14,7 @@ const option = {
 passport.use(
     new JWTStrategy(option, async (payload, done) => {
         try {
-            const user = getUserFromId(payload.id);
+            const user = await getUserFromId(payload.id);
             if (user) {
                 done(null, user);
             } else {
@@ -27,7 +27,7 @@ passport.use(
 );
 
 export const privateRouter: RequestHandler = async (req, res, next) => {
-    passport.authenticate("jwt", (err: any, user: User) => {
+    passport.authenticate("jwt", async (err: any, user: User) => {
         req.user = user;
         req.user ? next() : next(notAuthoridedJson);
     })(req, res, next);

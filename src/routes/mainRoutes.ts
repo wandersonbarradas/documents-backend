@@ -1,9 +1,7 @@
-import { isLoggedIn } from "./../controllers/auth";
 import { Request, Response, Router } from "express";
 import * as documentsTypes from "../controllers/documentsTypes";
 import * as documents from "../controllers/documents";
 import * as documentsTypesTexts from "../controllers/documentsTypesTexts";
-import * as documentsTypesFields from "../controllers/documentsTypesFields";
 import * as auth from "../controllers/auth";
 import * as utils from "../controllers/utils";
 import { privateRouter } from "../config/passport";
@@ -13,10 +11,10 @@ router.get("/ping", (req: Request, res: Response) => {
     res.json({ pong: true });
 });
 
-router.get("/documents/pdf", utils.generatePDF);
+router.get("/documents/pdf/:id", privateRouter, utils.generatePDF);
 
 //Auth
-router.post("/auth/register", auth.register);
+router.post("/auth/register", privateRouter, auth.register);
 router.post("/auth/login", auth.login);
 router.get("/auth/isLoggedIn", privateRouter, auth.isLoggedIn);
 //Documents types
@@ -62,27 +60,6 @@ router.delete(
     "/documents-types/:id_document_type/texts/:id",
     privateRouter,
     documentsTypesTexts.deleteDocumentTypeText,
-);
-//Text Fields
-router.get(
-    "/documents-types/:id_document_type/texts/:id_text/fields",
-    privateRouter,
-    documentsTypesFields.getAll,
-);
-router.post(
-    "/documents-types/:id_document_type/texts/:id_text/fields",
-    privateRouter,
-    documentsTypesFields.addDocumentTypeField,
-);
-router.put(
-    "/documents-types/:id_document_type/texts/:id_text/fields/:id",
-    privateRouter,
-    documentsTypesFields.updateDocumentTypeField,
-);
-router.delete(
-    "/documents-types/:id_document_type/texts/:id_text/fields/:id",
-    privateRouter,
-    documentsTypesFields.deleteDocumentTypeField,
 );
 //Documents
 router.get("/documents", privateRouter, documents.getAll);
