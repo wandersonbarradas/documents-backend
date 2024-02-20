@@ -16,6 +16,12 @@ export const generatePDF: RequestHandler = async (req, res) => {
     await page.goto(`http://localhost:3000/documentos-emitidos/${id}`, {
         waitUntil: "load",
     });
+    await page.evaluate((selector) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
+            elemento.className = "";
+        }
+    }, "body");
     const button = "#print";
     await page.evaluate((selector) => {
         const elemento = document.querySelector(selector) as HTMLElement;
