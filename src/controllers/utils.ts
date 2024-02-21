@@ -13,9 +13,12 @@ export const generatePDF: RequestHandler = async (req, res) => {
         path: "/", // Altere para o caminho correto, se necessário
     });
     // Navega até uma página que requer autenticação
-    await page.goto(`http://localhost:3000/documentos-emitidos/${id}`, {
-        waitUntil: "load",
-    });
+    await page.goto(
+        `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
+        {
+            waitUntil: "load",
+        },
+    );
     await page.evaluate((selector) => {
         const elemento = document.querySelector(selector) as HTMLElement;
         if (elemento) {
