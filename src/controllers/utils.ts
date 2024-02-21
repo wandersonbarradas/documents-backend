@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
-import puppeteer from "puppeteer";
 import fs from "fs";
+import { getBrowser } from "../utils/getBrowser";
+
 export const generatePDF: RequestHandler = async (req, res) => {
     const { id } = req.params;
-    const browser = await puppeteer.launch();
+    const browser = await getBrowser();
     const page = await browser.newPage();
     const token = req.headers.authorization?.split(" ")[1];
     await page.setCookie({
@@ -13,12 +14,10 @@ export const generatePDF: RequestHandler = async (req, res) => {
         path: "/", // Altere para o caminho correto, se necessário
     });
     // Navega até uma página que requer autenticação
-    await page.goto(
-        `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
-        {
-            waitUntil: "load",
-        },
-    );
+    //http://localhost:3000/documentos-emitidos/${id}
+    await page.goto(`https://www.google.com/`, {
+        waitUntil: "load",
+    });
     await page.evaluate((selector) => {
         const elemento = document.querySelector(selector) as HTMLElement;
         if (elemento) {
