@@ -1,4 +1,3 @@
-import playwright from "playwright-core";
 import chromium from "chrome-aws-lambda";
 import puppeteer from "puppeteer-core";
 import path from "path";
