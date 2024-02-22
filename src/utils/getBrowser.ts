@@ -17,8 +17,6 @@ export const getBrowser = async () => {
                   ),
         headless:
             process.env.NODE_ENV !== "development" ? chromium.headless : true,
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
     });
     return browser;
 };
