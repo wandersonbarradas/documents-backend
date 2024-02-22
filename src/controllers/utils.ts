@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import puppeteer from "puppeteer";
 import fs from "fs";
+import { getBrowser } from "../utils/getBrowser";
 export const generatePDF: RequestHandler = async (req, res) => {
     const { id } = req.params;
-    const browser = await puppeteer.launch();
+    const browser = await getBrowser();
     const page = await browser.newPage();
     const token = req.headers.authorization?.split(" ")[1];
     await page.setCookie({
@@ -14,7 +14,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
     });
     // Navega até uma página que requer autenticação
     await page.goto(
-        `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
+        `https://documents-backend.vercel.app/documentos-emitidos/${id}`,
         {
             waitUntil: "load",
         },
@@ -62,7 +62,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
 
     // Gera um PDF da página atual
     const pdf = await page.pdf({
-        format: "A4",
+        format: "a4",
         displayHeaderFooter: true,
         printBackground: true,
         headerTemplate: headerTemplate,
