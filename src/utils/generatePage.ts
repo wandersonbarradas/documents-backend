@@ -33,12 +33,12 @@ export const generatePage = (document: documentPrit) => {
     }
                             </b>
                         </div>
-                        <div class="text-justify">
+                        <p class="text-justify">
                             ${document.text}
-                        </div>
+                        </p>
                         ${
                             document.document_type.expires
-                                ? `<p class="text-sm">
+                                ? `<p class="text-sm" id="valid">
                                     O presente Documento tem validade de 
                                     ${document.document_type.validity} (
                                     ${extenso(document.document_type.validity)})
