@@ -1,31 +1,19 @@
-import chromium from "chrome-aws-lambda";
+import chrome from "@sparticuz/chromium";
 import puppeteer_core from "puppeteer-core";
-import puppeteerLib from "puppeteer";
+import puppeteer from "puppeteer";
 
 export const getBrowser = async () => {
-    let chrome = {};
-    let puppeteer;
+    let browser;
     if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-        chrome = chromium;
-        puppeteer = puppeteer_core;
-    } else {
-        puppeteer = puppeteerLib;
-    }
-    let options = {};
-
-    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-        options = {
-            args: [
-                ...chromium.args,
-                "--hide-scrollbars",
-                "--disable-web-security",
-            ],
-            defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath,
-            headless: true,
+        browser = puppeteer_core.launch({
+            args: chrome.args,
+            defaultViewport: chrome.defaultViewport,
+            executablePath: await chrome.executablePath(),
+            headless: "new",
             ignoreHTTPSErrors: true,
-        };
+        });
+    } else {
+        browser = puppeteer.launch();
     }
-    const browser = puppeteer.launch(options);
     return browser;
 };
