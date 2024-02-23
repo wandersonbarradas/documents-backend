@@ -1,53 +1,19 @@
 import { RequestHandler } from "express";
+import * as documents from "../services/documents";
 import fs from "fs";
 import { getBrowser } from "../utils/getBrowser";
+import { error } from "console";
+import { generatePage } from "../utils/generatePage";
 export const generatePDF: RequestHandler = async (req, res) => {
     const { id } = req.params;
+    const documentItem = await documents.getOne(parseInt(id));
+    if (!documentItem) {
+        return res.json({ error: "Documento não encontrado!" });
+    }
     const browser = await getBrowser();
     const page = await browser.newPage();
-    const token = req.headers.authorization?.split(" ")[1];
-    await page.setCookie({
-        name: "token",
-        value: (token as string) || "",
-        domain: "localhost", // Altere para o domínio correto
-        path: "/", // Altere para o caminho correto, se necessário
-    });
-    // Navega até uma página que requer autenticação
-    await page.goto(
-        `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
-        {
-            waitUntil: "domcontentloaded",
-        },
-    );
-    await page.waitForSelector("text-sm text-justify");
-    await page.evaluate((selector: string) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            console.log(elemento.innerHTML);
-        }
-    }, "text-sm text-justify");
-    await page.evaluate((selector: string) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.className = "";
-        }
-    }, "body");
-    const button = "#print";
-    await page.evaluate((selector) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.style.display = "none";
-        }
-    }, button);
-    const box = "#box";
-    await page.evaluate((selector) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.style.marginTop = "128px";
-            elemento.style.height = "78%";
-        }
-    }, box);
-
+    const content = generatePage(documentItem);
+    await page.setContent(content);
     // Lê a imagem como base64
     const imageData = fs.readFileSync("public/img/Imagem1.jpg", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
