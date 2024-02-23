@@ -20,27 +20,34 @@ export const generatePDF: RequestHandler = async (req, res) => {
         },
     );
 
-    // await page.evaluate((selector: string) => {
-    //     const elemento = document.querySelector(selector) as HTMLElement;
-    //     if (elemento) {
-    //         elemento.className = "";
-    //     }
-    // }, "body");
-    // const button = "#print";
-    // await page.evaluate((selector) => {
-    //     const elemento = document.querySelector(selector) as HTMLElement;
-    //     if (elemento) {
-    //         elemento.style.display = "none";
-    //     }
-    // }, button);
-    // const box = "#box";
-    // await page.evaluate((selector) => {
-    //     const elemento = document.querySelector(selector) as HTMLElement;
-    //     if (elemento) {
-    //         elemento.style.marginTop = "128px";
-    //         elemento.style.height = "78%";
-    //     }
-    // }, box);
+    let content = "";
+    await page.evaluate((selector: string) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
+            content = elemento.innerHTML;
+        }
+    }, "text-sm text-justify");
+    await page.evaluate((selector: string) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
+            elemento.className = "";
+        }
+    }, "body");
+    const button = "#print";
+    await page.evaluate((selector) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
+            elemento.style.display = "none";
+        }
+    }, button);
+    const box = "#box";
+    await page.evaluate((selector) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
+            elemento.style.marginTop = "128px";
+            elemento.style.height = "78%";
+        }
+    }, box);
 
     // Lê a imagem como base64
     const imageData = fs.readFileSync("public/img/Imagem1.jpg", "base64");
@@ -53,6 +60,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
   `;
     const footerTemplate = `
     <div style="width: 100%; border-top: solid 2px #000; margin: 0px 110px 16px 110px; text-align: center; background-color: red; font-size: 14px; font-weight: bold; position: relative;">
+        ${content}
         <p style="text-align: center; margin: 0px">COORDENAÇÃO MUNICIPAL DE TRIBUTOS</p>
         <p style="text-align: center; margin: 0px">AVENIDA PADRE JOAQUIM NONATO, 132 – BAIRRO CENTRO – CEP: 64390-000</p>
         <p style="text-align: center; margin: 0px">EMAIL: tributospmdl@gmail.com</p>
