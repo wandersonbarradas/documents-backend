@@ -8,7 +8,6 @@ type documentPrit = Document & {
 
 export const generatePage = (document: documentPrit) => {
     const size = document.text.length;
-    console.log("🚀 ~ generatePage ~ size:", size);
     const imageData = fs.readFileSync("public/img/imagem2.jpg", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
@@ -25,7 +24,7 @@ export const generatePage = (document: documentPrit) => {
                 <div
                     id="box"
                     class="absolute top-0 left-0 right-0 bottom-0 text-black ${
-                        size > 700 ? "pt-20" : "pt-72"
+                        size > 800 ? "pt-20" : "pt-44"
                     } text-center bg-white/90"
                 >
                     <div style="font-family: "Roboto", sans-serif !important" class="w-full max-w-xl mx-auto">
