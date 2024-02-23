@@ -14,12 +14,12 @@ export const generatePDF: RequestHandler = async (req, res) => {
     });
     // Navega até uma página que requer autenticação
     await page.goto(
-        `https://documents-backend.vercel.app/documentos-emitidos/${id}`,
+        `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
         {
             waitUntil: "load",
         },
     );
-    await page.evaluate((selector) => {
+    await page.evaluate((selector: string) => {
         const elemento = document.querySelector(selector) as HTMLElement;
         if (elemento) {
             elemento.className = "";

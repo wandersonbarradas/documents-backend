@@ -5,7 +5,7 @@ import puppeteer from "puppeteer";
 export const getBrowser = async () => {
     let browser;
     if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-        browser = puppeteer_core.launch({
+        browser = await puppeteer_core.launch({
             args: chrome.args,
             defaultViewport: chrome.defaultViewport,
             executablePath: await chrome.executablePath(),
@@ -13,7 +13,7 @@ export const getBrowser = async () => {
             ignoreHTTPSErrors: true,
         });
     } else {
-        browser = puppeteer.launch();
+        browser = await puppeteer.launch();
     }
     return browser;
 };
