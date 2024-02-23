@@ -33,7 +33,7 @@ export const generatePage = (document: documentPrit) => {
     }
                             </b>
                         </div>
-                        <div class="text-sm text-justify">
+                        <div class="text-justify">
                             ${document.text}
                         </div>
                         ${
