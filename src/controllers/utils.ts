@@ -28,6 +28,12 @@ export const generatePDF: RequestHandler = async (req, res) => {
     await page.evaluate((selector: string) => {
         const elemento = document.querySelector(selector) as HTMLElement;
         if (elemento) {
+            console.log(elemento.innerHTML);
+        }
+    }, "text-sm text-justify");
+    await page.evaluate((selector: string) => {
+        const elemento = document.querySelector(selector) as HTMLElement;
+        if (elemento) {
             elemento.className = "";
         }
     }, "body");
