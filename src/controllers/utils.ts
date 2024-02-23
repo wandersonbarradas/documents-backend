@@ -19,29 +19,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
             waitUntil: "domcontentloaded",
         },
     );
-<<<<<<< HEAD
-    await page.evaluate((selector: string) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.className = "";
-        }
-    }, "body");
-    const button = "#print";
-    await page.evaluate((selector) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.style.display = "none";
-        }
-    }, button);
-    const box = "#box";
-    await page.evaluate((selector) => {
-        const elemento = document.querySelector(selector) as HTMLElement;
-        if (elemento) {
-            elemento.style.marginTop = "128px";
-            elemento.style.height = "78%";
-        }
-    }, box);
-=======
 
     // await page.evaluate((selector: string) => {
     //     const elemento = document.querySelector(selector) as HTMLElement;
@@ -64,7 +41,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
     //         elemento.style.height = "78%";
     //     }
     // }, box);
->>>>>>> pdf
 
     // Lê a imagem como base64
     const imageData = fs.readFileSync("public/img/Imagem1.jpg", "base64");
