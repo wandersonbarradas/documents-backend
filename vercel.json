@@ -6,5 +6,10 @@
             "src": "(.*)",
             "dest": "src/server.ts"
         }
-    ]
+    ],
+    "function": {
+        "api/**/*": {
+            "maxDuration": 60
+        }
+    }
 }
