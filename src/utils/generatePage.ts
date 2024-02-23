@@ -24,7 +24,7 @@ export const generatePage = (document: documentPrit) => {
                 <div
                     id="box"
                     class="absolute top-0 left-0 right-0 bottom-0 text-black ${
-                        size > 700 ? "pt-20" : "pt-44"
+                        size > 700 ? "pt-20" : "pt-56"
                     } text-center bg-white/90"
                 >
                     <div style="font-family: "Roboto", sans-serif !important" class="w-full max-w-xl mx-auto">
