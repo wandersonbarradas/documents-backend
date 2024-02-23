@@ -4,9 +4,7 @@ import { getBrowser } from "../utils/getBrowser";
 export const generatePDF: RequestHandler = async (req, res) => {
     const { id } = req.params;
     const browser = await getBrowser();
-    console.log("Abriu o navegador");
     const page = await browser.newPage();
-    console.log("Criou a página");
     const token = req.headers.authorization?.split(" ")[1];
     await page.setCookie({
         name: "token",
@@ -14,7 +12,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
         domain: "localhost", // Altere para o domínio correto
         path: "/", // Altere para o caminho correto, se necessário
     });
-    console.log("Setou os cookies");
     // Navega até uma página que requer autenticação
     await page.goto(
         `https://docs-tributos.vercel.app/documentos-emitidos/${id}`,
@@ -22,9 +19,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
             waitUntil: "domcontentloaded",
         },
     );
-    console.log("Abriu a url");
     await page.waitForSelector("text-sm text-justify");
-    console.log("Esperou carregar o conteudo");
     await page.evaluate((selector: string) => {
         const elemento = document.querySelector(selector) as HTMLElement;
         if (elemento) {
@@ -64,7 +59,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
   `;
     const footerTemplate = `
     <div style="width: 100%; border-top: solid 2px #000; margin: 0px 110px 16px 110px; text-align: center; background-color: red; font-size: 14px; font-weight: bold; position: relative;">
-        ${content}
         <p style="text-align: center; margin: 0px">COORDENAÇÃO MUNICIPAL DE TRIBUTOS</p>
         <p style="text-align: center; margin: 0px">AVENIDA PADRE JOAQUIM NONATO, 132 – BAIRRO CENTRO – CEP: 64390-000</p>
         <p style="text-align: center; margin: 0px">EMAIL: tributospmdl@gmail.com</p>
@@ -89,7 +83,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
     });
     // Fecha o navegador
     await browser.close();
-    console.log("Finalizou o browser");
     res.contentType("application/pdf");
     return res.send(pdf);
 };
