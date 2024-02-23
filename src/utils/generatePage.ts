@@ -31,7 +31,7 @@ export const generatePage = (document: documentPrit) => {
                         <div class="mb-20 text-sm">
                             <b> ${document.document_type.title} ${
         document.document_type.has_number
-            ? Formatter.number(document.number as string)
+            ? "Nº " + Formatter.number(document.number as string)
             : ""
     }
                             </b>
