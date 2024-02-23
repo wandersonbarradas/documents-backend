@@ -14,14 +14,6 @@ export const generatePDF: RequestHandler = async (req, res) => {
     const page = await browser.newPage();
     const content = generatePage(documentItem);
     await page.setContent(content);
-    const removeElement = (selector: string) => {
-        const element = document.querySelector(selector) as HTMLElement;
-        if (element) {
-            console.log(element.style.fontFamily);
-        }
-    };
-
-    await page.evaluate(removeElement, "#valid");
     // Lê a imagem como base64
     const imageData = fs.readFileSync("public/img/Imagem1.jpg", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
