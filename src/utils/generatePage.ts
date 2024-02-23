@@ -27,7 +27,7 @@ export const generatePage = (document: documentPrit) => {
                         size > 700 ? "pt-20" : "pt-44"
                     } text-center bg-white/90"
                 >
-                    <div class="w-full max-w-xl mx-auto">
+                    <div style="font-family: "Roboto", sans-serif !important" class="w-full max-w-xl mx-auto">
                         <div class="mb-20 text-sm">
                             <b> ${document.document_type.title} ${
         document.document_type.has_number
@@ -36,7 +36,7 @@ export const generatePage = (document: documentPrit) => {
     }
                             </b>
                         </div>
-                        <p class="text-justify">
+                        <p style="font-family: "Roboto", sans-serif !important" class="text-justify">
                             ${document.text}
                         </p>
                         ${
@@ -49,7 +49,7 @@ export const generatePage = (document: documentPrit) => {
                                 </p>`
                                 : ""
                         }
-                        <div class="text-sm mt-10">
+                        <div style="font-family: "Roboto", sans-serif !important" class="text-sm mt-10">
                             Demerval Lobão ${Formatter.formatarDataPorExtenso(
                                 new Date(document.date),
                             )}
