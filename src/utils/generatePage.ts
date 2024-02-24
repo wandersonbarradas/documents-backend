@@ -8,6 +8,12 @@ type documentPrit = Document & {
 
 export const generatePage = (document: documentPrit) => {
     const size = document.text.length;
+    const regex = /font-size:\s*([\d.]+)px/;
+    const match = regex.exec(document.text) as RegExpExecArray;
+    let fontSize = "text-sm";
+    if (match[1]) {
+        fontSize = match[1] + "px";
+    }
     const imageData = fs.readFileSync("public/img/imagem2.jpg", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
@@ -28,7 +34,7 @@ export const generatePage = (document: documentPrit) => {
                     } text-center bg-white/90"
                 >
                     <div style="font-family: "Roboto", sans-serif !important" class="w-full max-w-xl mx-auto">
-                        <div class="mb-20 text-sm">
+                        <div class="mb-20 ${fontSize}">
                             <b> ${document.document_type.title} ${
         document.document_type.has_number
             ? "Nº " + Formatter.number(document.number as string)
@@ -41,7 +47,7 @@ export const generatePage = (document: documentPrit) => {
                         </p>
                         ${
                             document.document_type.expires
-                                ? `<p class="text-sm">
+                                ? `<p class="${fontSize}">
                                     O presente Documento tem validade de 
                                     ${document.document_type.validity} (
                                     ${extenso(document.document_type.validity)})
@@ -49,7 +55,7 @@ export const generatePage = (document: documentPrit) => {
                                 </p>`
                                 : ""
                         }
-                        <div style="font-family: "Roboto", sans-serif !important" class="text-sm mt-10">
+                        <div style="font-family: "Roboto", sans-serif !important" class="${fontSize} mt-10">
                             Demerval Lobão ${Formatter.formatarDataPorExtenso(
                                 new Date(document.date),
                             )}
