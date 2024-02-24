@@ -70,6 +70,7 @@ model Document {
   document_type_text_id Int
   number                String?
   text                  String
+  html                  String
   date                  DateTime  @default(now())
   created_at            DateTime  @default(now())
   updated_at            DateTime?
