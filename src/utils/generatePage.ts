@@ -7,10 +7,10 @@ type documentPrit = Document & {
 };
 
 export const generatePage = (document: documentPrit) => {
-    const size = document.text.length;
+    const size = document.html.length;
     const regex = /font-size:\s*([\d.]+)px/;
-    const match = regex.exec(document.text) as RegExpExecArray;
-    console.log(/font-family:\s*([^;]+)/.exec(document.text));
+    const match = regex.exec(document.html) as RegExpExecArray;
+    console.log(/font-family:\s*([^;]+)/.exec(document.html));
     let fontSize = "text-sm";
     if (match[1]) {
         fontSize = `text-[${match[1]}px]`;
