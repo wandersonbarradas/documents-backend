@@ -45,7 +45,7 @@ export const generatePage = (document: documentPrit) => {
                             </b>
                         </div>
                         <p style="font-family: Roboto, sans-serif !important" class="text-justify">
-                            ${document.text}
+                            ${document.html}
                         </p>
                         ${
                             document.document_type.expires

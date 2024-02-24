@@ -28,6 +28,7 @@ export const addDocument: RequestHandler = async (req, res) => {
     const addDocumentSchema = z.object({
         date: z.string().transform((date) => new Date(date)),
         text: z.string(),
+        html: z.string(),
         document_type_id: z.number(),
         document_type_text_id: z.number(),
         created_at: z
@@ -80,6 +81,7 @@ export const updateDocument: RequestHandler = async (req, res) => {
             .transform((date) => new Date(date))
             .optional(),
         text: z.string().optional(),
+        html: z.string().optional(),
         number: z.string().optional(),
         document_type_text_id: z.number().optional(),
         updated_at: z.string().transform((date) => new Date(date)),
