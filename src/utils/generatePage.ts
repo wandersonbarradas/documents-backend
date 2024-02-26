@@ -16,7 +16,7 @@ export const generatePage = (document: documentPrit) => {
         fontSize = `text-[${match[1]}px]`;
     }
     console.log(fontSize);
-    const imageData = fs.readFileSync("public/img/imagem2.jpg", "base64");
+    const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
         <html>

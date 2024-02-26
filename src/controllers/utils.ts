@@ -17,7 +17,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
         const content = generatePage(documentItem);
         await page.setContent(content);
         // Lê a imagem como base64
-        const imageData = fs.readFileSync("public/img/Imagem1.jpg", "base64");
+        const imageData = fs.readFileSync("public/img/Imagem1.png", "base64");
         const dataUri = `data:image/jpg;base64,${imageData}`;
         const headerTemplate = `
           <div style="width: 100%; display: flex; justify-content: center; margin: 23px 110px 0 110px; border-bottom: solid 2px #000; padding-bottom: 6px; position: relative">
