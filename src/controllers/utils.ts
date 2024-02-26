@@ -45,8 +45,8 @@ export const generatePDF: RequestHandler = async (req, res) => {
             margin: {
                 top: "130px", // Margem superior para deixar espaço para o cabeçalho
                 bottom: "130px", // Margem inferior para deixar espaço para o rodapé
-                left: "100px",
-                right: "100px",
+                left: "80px",
+                right: "80px",
             },
         });
         // Fecha o navegador

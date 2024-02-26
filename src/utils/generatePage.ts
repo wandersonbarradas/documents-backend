@@ -32,8 +32,8 @@ export const generatePage = (document: documentPrit) => {
                 <div
                     id="box"
                     class="absolute top-0 left-0 right-0 bottom-0 text-black ${
-                        size > 800 ? "pt-20" : "pt-44"
-                    } text-center bg-white/90"
+                        size > 800 ? "pt-28" : "pt-44"
+                    } text-center bg-white/70"
                 >
                     <div style="font-family: Roboto, sans-serif !important" class="w-full max-w-xl mx-auto">
                         <div class="mb-20 ${fontSize}">
