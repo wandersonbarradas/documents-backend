@@ -50,9 +50,11 @@ export const generatePage = (document: documentPrit) => {
                         ${
                             document.document_type.expires
                                 ? `<p class="${fontSize}">
-                                    O presente Documento tem validade de 
+                                    O presente documento tem validade de 
                                     ${document.document_type.validity} (
-                                    ${extenso(document.document_type.validity)})
+                                    ${extenso(
+                                        document.document_type.validity,
+                                    ).toLocaleLowerCase()})
                                     dias.
                                 </p>`
                                 : ""
