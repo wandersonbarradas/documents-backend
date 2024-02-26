@@ -20,13 +20,13 @@ export const generatePDF: RequestHandler = async (req, res) => {
         const imageData = fs.readFileSync("public/img/Imagem1.png", "base64");
         const dataUri = `data:image/jpg;base64,${imageData}`;
         const headerTemplate = `
-          <div style="width: 100%; display: flex; justify-content: center; margin: 16px 80px 0 80px; border-bottom: solid 2px #000; padding-bottom: 6px; position: relative">
+          <div style="width: 100%; display: flex; justify-content: center; margin: 16px 90px 0 90px; border-bottom: solid 2px #000; padding-bottom: 6px; position: relative">
             <img src="${dataUri}" style="width: 428px; height: 73px; margin-left: -10px">
             <div style="position: absolute; top: 5px; left: 0; right: 0; height: 80px; background-color: #FFF; opacity: 0.1"></div>
           </div>
         `;
         const footerTemplate = `
-          <div style="width: 100%; border-top: solid 2px #000; margin: 0px 80px 10px 80px; text-align: center; background-color: red; font-size: 14px; font-weight: bold; position: relative;">
+          <div style="width: 100%; border-top: solid 2px #000; margin: 0px 90px 10px 90px; text-align: center; background-color: red; font-size: 14px; font-weight: bold; position: relative;">
               <p style="text-align: center; margin: 0px">COORDENAÇÃO MUNICIPAL DE TRIBUTOS</p>
               <p style="text-align: center; margin: 0px">AVENIDA PADRE JOAQUIM NONATO, 132 – BAIRRO CENTRO – CEP: 64390-000</p>
               <p style="text-align: center; margin: 0px">EMAIL: tributospmdl@gmail.com</p>
