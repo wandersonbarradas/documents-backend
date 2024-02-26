@@ -21,7 +21,7 @@ export const generatePDF: RequestHandler = async (req, res) => {
         const dataUri = `data:image/jpg;base64,${imageData}`;
         const headerTemplate = `
           <div style="width: 100%; display: flex; justify-content: center; margin: 23px 110px 0 110px; border-bottom: solid 2px #000; padding-bottom: 6px; position: relative">
-            <img src="${dataUri}" style="width: 428px; height: 73px; margin-left: -10px">
+            <img src="https://drive.google.com/file/d/10bDqJL9mRlp6Oy8Bu_0s-YUGlZJ4AVHZ/view" style="width: 428px; height: 73px; margin-left: -10px">
             <div style="position: absolute; top: 5px; left: 0; right: 0; height: 80px; background-color: #FFF; opacity: 0.1"></div>
           </div>
         `;
