@@ -18,7 +18,7 @@ export const generatePage = (document: documentPrit) => {
     const matchParagraph = regexParagraph.exec(document.html);
     let paragraph = "";
     if (matchParagraph) {
-        paragraph = matchParagraph.join("");
+        paragraph = matchParagraph.join("").replace(/\s/g, "");
     }
     const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
@@ -54,7 +54,7 @@ export const generatePage = (document: documentPrit) => {
                         ${
                             document.document_type.expires
                                 ? `<p class="${fontSize} text-start">
-                                   ${paragraph} O presente documento tem validade de 
+                                   ${paragraph}O presente documento tem validade de 
                                     ${document.document_type.validity} (
                                     ${extenso(
                                         document.document_type.validity,
