@@ -19,7 +19,7 @@ export const generatePage = (document: documentPrit) => {
     console.log("matchParagraph", matchParagraph);
     let paragraph = "";
     if (matchParagraph) {
-        paragraph = matchParagraph.join("").replace(/\s/g, "");
+        paragraph = matchParagraph.join("");
     }
     console.log("Paragrafo", paragraph);
     const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
