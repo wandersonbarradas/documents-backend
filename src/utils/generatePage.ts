@@ -14,12 +14,14 @@ export const generatePage = (document: documentPrit) => {
     if (matchFontSize[1]) {
         fontSize = `text-[${matchFontSize[1]}px]`;
     }
-    const regexParagraph = /&nbsp;\s*/g;
-    const matchParagraph = regexParagraph.exec(document.html);
+    const regexParagraph = /(&nbsp; ){2,}/;
+    const matchParagraph = document.html.match(regexParagraph);
+    console.log("matchParagraph", matchParagraph);
     let paragraph = "";
     if (matchParagraph) {
         paragraph = matchParagraph.join("").replace(/\s/g, "");
     }
+    console.log("Paragrafo", paragraph);
     const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
