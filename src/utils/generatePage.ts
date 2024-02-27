@@ -8,14 +8,18 @@ type documentPrit = Document & {
 
 export const generatePage = (document: documentPrit) => {
     const size = document.html.length;
-    const regex = /font-size:\s*([\d.]+)px/;
-    const match = regex.exec(document.html) as RegExpExecArray;
-    console.log(/font-family:\s*([^;]+)/.exec(document.html));
+    const regexFontSize = /font-size:\s*([\d.]+)px/;
+    const matchFontSize = regexFontSize.exec(document.html) as RegExpExecArray;
     let fontSize = "text-sm";
-    if (match[1]) {
-        fontSize = `text-[${match[1]}px]`;
+    if (matchFontSize[1]) {
+        fontSize = `text-[${matchFontSize[1]}px]`;
     }
-    console.log(fontSize);
+    const regexParagraph = /&nbsp;\s*/g;
+    const matchParagraph = regexParagraph.exec(document.html);
+    let paragraph = "";
+    if (matchParagraph) {
+        paragraph = matchParagraph.join("");
+    }
     const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
@@ -49,8 +53,8 @@ export const generatePage = (document: documentPrit) => {
                         </p>
                         ${
                             document.document_type.expires
-                                ? `<p class="${fontSize}">
-                                    O presente documento tem validade de 
+                                ? `<p class="${fontSize} text-start">
+                                   ${paragraph} O presente documento tem validade de 
                                     ${document.document_type.validity} (
                                     ${extenso(
                                         document.document_type.validity,
