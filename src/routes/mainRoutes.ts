@@ -63,6 +63,7 @@ router.delete(
 );
 //Documents
 router.get("/documents", privateRouter, documents.getAll);
+router.get("/documents", privateRouter, documents.getAll);
 router.get("/documents/:id", privateRouter, documents.getDocument);
 router.post("/documents", privateRouter, documents.addDocument);
 router.put("/documents/:id", privateRouter, documents.updateDocument);

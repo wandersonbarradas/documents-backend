@@ -5,21 +5,72 @@ import { getErrorFromPrisma } from "../utils/getErrorFromPrisma";
 const prisma = new PrismaClient();
 
 const include = { document_type: true };
-
-export const getAll = async () => {
+type Filters = {
+    page: number;
+    pageSize: number;
+    order?: { [key: string]: "asc" | "desc" };
+    owner?: string;
+    cpf_cnpj?: string;
+    address?: string;
+};
+export const getAll = async (filters: Filters) => {
     try {
-        return await prisma.document.findMany({
-            // where: {
-            //     text: {
-            //         contains: "wanDerSon",
-            //         mode: "insensitive",
-            //     },
-            // },
-            include,
-            orderBy: {
-                id: "asc",
+        const totalCount = await prisma.document.count({
+            where: {
+                AND: [
+                    {
+                        text: {
+                            contains: filters.owner,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        text: {
+                            contains: filters.cpf_cnpj,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        text: {
+                            contains: filters.address,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
             },
         });
+        const documents = await prisma.document.findMany({
+            take: filters.pageSize,
+            skip: (filters.page - 1) * filters.pageSize,
+            where: {
+                AND: [
+                    {
+                        text: {
+                            contains: filters.owner,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        text: {
+                            contains: filters.cpf_cnpj,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        text: {
+                            contains: filters.address,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
+            },
+            include,
+            orderBy: filters.order,
+        });
+        return {
+            documents,
+            totalCount,
+        };
     } catch (error) {
         console.log("🚀 ~ getAll ~ error:", error);
         return false;

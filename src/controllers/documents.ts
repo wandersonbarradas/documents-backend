@@ -5,9 +5,20 @@ import { z } from "zod";
 import { User } from "@prisma/client";
 
 export const getAll: RequestHandler = async (req, res) => {
-    const documentsItems = await documents.getAll();
+    const { page, pageSize, orderKey, orderValue, owner, address, cpf_cnpj } =
+        req.query;
+    const filter = {
+        page: page ? parseInt(page as string) : 1,
+        pageSize: pageSize ? parseInt(pageSize as string) : 10,
+        order: { [orderKey as string]: orderValue as "asc" | "desc" },
+        owner: owner as string,
+        cpf_cnpj: cpf_cnpj as string,
+        address: address as string,
+    };
+    console.log("🚀 ~ constgetAll:RequestHandler= ~ filter:", filter);
+    const documentsItems = await documents.getAll(filter);
     if (documentsItems) {
-        return res.json({ documents: documentsItems });
+        return res.json(documentsItems);
     }
 
     res.json({ error: "Ocorreu um erro!" });
