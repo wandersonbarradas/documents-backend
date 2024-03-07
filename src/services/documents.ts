@@ -23,6 +23,19 @@ export const getAll = async (filters: Filters) => {
             where: {
                 AND: [
                     {
+                        date: {
+                            gte: filters.initialDate, // gte: Greater Than or Equal
+                        },
+                    },
+                    {
+                        date: {
+                            lte: filters.finalDate, // lte: Less Than or Equal
+                        },
+                    },
+                    {
+                        document_type_id: filters.documentType,
+                    },
+                    {
                         text: {
                             contains: filters.owner,
                             mode: "insensitive",
