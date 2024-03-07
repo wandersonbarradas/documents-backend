@@ -12,6 +12,10 @@ type Filters = {
     owner?: string;
     cpf_cnpj?: string;
     address?: string;
+    number?: string;
+    initialDate?: Date;
+    finalDate?: Date;
+    documentType?: number;
 };
 export const getAll = async (filters: Filters) => {
     try {
@@ -36,6 +40,14 @@ export const getAll = async (filters: Filters) => {
                             mode: "insensitive",
                         },
                     },
+                    filters.number
+                        ? {
+                              number: {
+                                  contains: filters.number,
+                                  mode: "insensitive",
+                              },
+                          }
+                        : {},
                 ],
             },
         });
@@ -44,6 +56,19 @@ export const getAll = async (filters: Filters) => {
             skip: (filters.page - 1) * filters.pageSize,
             where: {
                 AND: [
+                    {
+                        date: {
+                            gte: filters.initialDate, // gte: Greater Than or Equal
+                        },
+                    },
+                    {
+                        date: {
+                            lte: filters.finalDate, // lte: Less Than or Equal
+                        },
+                    },
+                    {
+                        document_type_id: filters.documentType,
+                    },
                     {
                         text: {
                             contains: filters.owner,
@@ -62,6 +87,14 @@ export const getAll = async (filters: Filters) => {
                             mode: "insensitive",
                         },
                     },
+                    filters.number
+                        ? {
+                              number: {
+                                  contains: filters.number,
+                                  mode: "insensitive",
+                              },
+                          }
+                        : {},
                 ],
             },
             include,

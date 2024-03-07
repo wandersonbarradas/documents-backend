@@ -5,8 +5,19 @@ import { z } from "zod";
 import { User } from "@prisma/client";
 
 export const getAll: RequestHandler = async (req, res) => {
-    const { page, pageSize, orderKey, orderValue, owner, address, cpf_cnpj } =
-        req.query;
+    const {
+        page,
+        pageSize,
+        orderKey,
+        orderValue,
+        owner,
+        address,
+        cpf_cnpj,
+        number,
+        initialDate,
+        finalDate,
+        documentType,
+    } = req.query;
     const filter = {
         page: page ? parseInt(page as string) : 1,
         pageSize: pageSize ? parseInt(pageSize as string) : 10,
@@ -14,6 +25,12 @@ export const getAll: RequestHandler = async (req, res) => {
         owner: owner as string,
         cpf_cnpj: cpf_cnpj as string,
         address: address as string,
+        number: (number as string) ?? undefined,
+        initialDate: initialDate ? new Date(initialDate as string) : undefined,
+        finalDate: finalDate ? new Date(finalDate as string) : undefined,
+        documentType: documentType
+            ? parseInt(documentType as string)
+            : undefined,
     };
     console.log("🚀 ~ constgetAll:RequestHandler= ~ filter:", filter);
     const documentsItems = await documents.getAll(filter);
