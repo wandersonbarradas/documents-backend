@@ -14,14 +14,14 @@ export const generatePage = (document: documentPrit) => {
     if (matchFontSize[1]) {
         fontSize = `text-[${matchFontSize[1]}px]`;
     }
-    const regexParagraph = /(&nbsp; ){2,}/;
-    const matchParagraph = document.html.match(regexParagraph);
-    console.log("matchParagraph", matchParagraph);
-    let paragraph = "";
-    if (matchParagraph) {
-        paragraph = matchParagraph.join("");
-    }
-    console.log("Paragrafo", paragraph);
+    // const regexParagraph = /(&nbsp; ){2,}/;
+    // const matchParagraph = document.html.match(regexParagraph);
+    // console.log("matchParagraph", matchParagraph);
+    // let paragraph = "";
+    // if (matchParagraph) {
+    //     paragraph = matchParagraph.join("");
+    // }
+    // console.log("Paragrafo", paragraph);
     const imageData = fs.readFileSync("public/img/imagem2.png", "base64");
     const dataUri = `data:image/jpg;base64,${imageData}`;
     const content = `
@@ -53,10 +53,11 @@ export const generatePage = (document: documentPrit) => {
                         <p style="font-family: Roboto, sans-serif !important" class="text-justify">
                             ${document.html}
                         </p>
+                        passport
                         ${
                             document.document_type.expires
-                                ? `<p class="${fontSize} text-start">
-                                   ${paragraph}O presente documento tem validade de 
+                                ? `<p class="${fontSize} text-center">
+                                   O presente documento tem validade de 
                                     ${document.document_type.validity} (
                                     ${extenso(
                                         document.document_type.validity,
