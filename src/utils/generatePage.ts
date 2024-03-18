@@ -53,7 +53,7 @@ export const generatePage = (document: documentPrit) => {
                         <p style="font-family: Roboto, sans-serif !important" class="text-justify">
                             ${document.html}
                         </p>
-                        passport
+                        
                         ${
                             document.document_type.expires
                                 ? `<p class="${fontSize} text-center">
